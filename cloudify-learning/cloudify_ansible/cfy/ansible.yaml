@@ -1,0 +1,54 @@
+# https://docs.cloudify.co/4.2.0/blueprints/spec-versioning/
+
+tosca_definitions_version: cloudify_dsl_1_3
+
+# https://docs.cloudify.co/4.2.0/blueprints/spec-imports/
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.2/types.yaml
+
+# https://docs.cloudify.co/4.2.0/blueprints/spec-inputs/
+
+inputs:
+
+  ip:
+    type: string
+
+  user:
+    type: string
+    default: vagrant
+
+  password:
+    type: string
+    default: vagrant
+
+# https://docs.cloudify.co/4.2.0/blueprints/spec-node-types/
+
+node_types:
+
+  example.nodes.ansible:
+    derived_from: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: create.py
+
+# https://docs.cloudify.co/4.2.0/blueprints/spec-node-templates/
+
+node_templates:
+
+  host:
+    type: cloudify.nodes.Compute
+    properties:
+      ip: { get_input: ip }
+      agent_config:
+        user: { get_input: user }
+        password: { get_input: password }
+
+  terraform:
+    type: example.nodes.ansible
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: host
+
+# https://docs.cloudify.co/4.2.0/blueprints/spec-outputs/

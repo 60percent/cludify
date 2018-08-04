@@ -1,0 +1,36 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.2/types.yaml
+
+inputs:
+  ip:
+    default: localhost
+  state:
+    type: string
+
+node_templates:
+  vm:
+    type: cloudify.nodes.Compute
+    properties:
+      ip: { get_input: ip }
+      install_agent: false
+  terraform:
+    type: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: install.sh
+          inputs:
+            process:
+              cwd: /vagrant
+              args: [ { get_input: state } ]
+        delete:
+          implementation: uninstall.sh
+          inputs:
+            process:
+              cwd: /vagrant
+              args: [ { get_input: state }]
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: vm

@@ -1,0 +1,59 @@
+Vagrant.configure("2") do |config|
+  config.vm.define "cfy" do |cfy|
+    cfy.vm.box = "bento/centos-7.2"
+    cfy.vm.box_version = "2.3.1"
+    cfy.vm.box_check_update = false
+
+    cfy.vm.network "private_network", ip: "192.168.0.11"
+    cfy.vm.network "forwarded_port", guest: 80, host: 1180
+
+    cfy.vm.provider "virtualbox" do |vb|
+      vb.memory = "4096"
+    end
+
+    cfy.vm.provision "shell", inline: <<-SHELL
+      rm -f ~/.ssh/id_rsa && ssh-keygen -q -t rsa -P "" -N "" -f ~/.ssh/id_rsa && cp ~/.ssh/id_rsa.pub /vagrant/sshkey/cfy
+      sudo yum install python-backports-ssl_match_hostname python-setuptools python-backports --assumeyes --verbose --nogpgcheck
+      sudo yum install openssl vim --assumeyes --verbose --nogpgcheck
+      sudo rpm --install /vagrant/rpm/cloudify-cli-*.rpm --verbose
+      sudo rpm --install /vagrant/rpm/cloudify-manager-*.rpm --verbose
+    SHELL
+  end
+
+
+  config.vm.define "ansible" do |ansible|
+    ansible.vm.box = "bento/centos-7.2"
+    ansible.vm.box_version = "2.3.1"
+    ansible.vm.box_check_update = false
+
+    ansible.vm.network "private_network", ip: "192.168.0.12"
+
+    ansible.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+    end
+
+    ansible.vm.provision "shell", inline: <<-SHELL
+      rm -f ~/.ssh/id_rsa && ssh-keygen -q -t rsa -P "" -N "" -f ~/.ssh/id_rsa && cp ~/.ssh/id_rsa.pub /vagrant/sshkey/ansible
+      sudo yum install openssl vim --assumeyes --verbose
+    SHELL
+  end
+
+  config.vm.define "client" do |client|
+    client.vm.box = "bento/centos-7.2"
+    client.vm.box_version = "2.3.1"
+    client.vm.box_check_update = false
+
+    client.vm.network "private_network", ip: "192.168.0.13"
+
+    client.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+    end
+
+    client.vm.provision "shell", inline: <<-SHELL
+      rm -f ~/.ssh/id_rsa && ssh-keygen -q -t rsa -P "" -N "" -f ~/.ssh/id_rsa && cp ~/.ssh/id_rsa.pub /vagrant/sshkey/client
+      sudo yum install openssl vim --assumeyes --verbose
+    SHELL
+  end
+
+
+end

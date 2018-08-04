@@ -1,0 +1,130 @@
+releases:
+
+  v1.0.0:
+  - rename plugin
+  - change property structure
+  - add data types and property validations
+  - unit tests
+
+  v1.1.0:
+  - add cloudify_ssh_key plugin (moved from cloudify-key-plugin).
+  - refactoring
+
+  v1.1.1:
+  - Fixed an issue where the install workflow is re-executed.
+
+  v1.2.0:
+  - Add NodeInstanceProxy node type.
+  - add cloudify rest client mock
+  - added more tests
+
+  v1.2.1:
+  - Public Key Runtime Property
+
+  v1.2.2:
+  - add ability to store to runtime props
+
+  v1.2.3:
+  - configuration plugin
+  - terminal plugin
+  - improved deployment/blueprint as external resource support
+
+  v1.2.4:
+  - handling paging in long executions in the deployment proxy
+  - added configuration plugin examples
+
+  v1.2.5:
+  - Added Cloud-init type.
+
+  v1.3.0:
+  - Added file type.
+
+  v1.3.1:
+  - Adding Suspend/Resume Workflow
+  - Adding Custom Workflow Tool
+  - Removing Files Feature
+  - Reorganizing plugin.yaml into types.yaml.
+
+  v1.4.0:
+  - Added support for files back in a simplified form.
+
+  v1.4.1:
+  - Added support for multiple IPs in Terminal plugin.
+
+  v1.4.1.1:
+  - Fixed bug in multiple IP handling.
+
+  v1.4.2:
+  - Configuration Plugin IP regression fixes.
+  - Merging Types YAML into single Plugin YAML.
+
+  v1.4.2.1:
+  - Handle parameters correctly in configuration update operation.
+
+  v1.4.3:
+  - Allow infinite timeout in deployment proxy.
+
+  v1.4.4:
+  - Add Debug Logging to Deployment Proxy.
+
+  v.1.4.5:
+  - Terminal Plugin Handle Socket Timeout.
+
+  v.1.5.0:
+  - Add REST Plugin for generic interaction with REST APIs.
+
+  v1.5.0.1:
+  - Deployment proxy bug fix. Ensure that correct execution ID is polled for deployment,
+    when workflow ID is identical.
+
+  v.1.5.1:
+  - Support user configuration of failure success on certain responses in REST plugin.
+
+  v.1.5.2:
+  - Bug fix for empty deployment outputs in deployment proxy.
+
+  v.1.5.3:
+  - Handle retries in REST type.
+
+  v.1.5.4:
+  - Add ability to send newline after answer question in terminal plugin.
+
+  v.1.6.0:
+  - Backup/Restore workflows
+  - Close connection after error in terminal plugin.
+
+  v.1.6.1:
+  - Improve Rest Plugin with recoverable error.
+
+  v.1.7.0:
+  - Add support for local blueprint archive
+
+  v.1.7.1:
+  - Fix bug introduced in 1.7.0 when blueprint archive is null.
+  - Changed the logic for external_resource in Blueprint and Deployment.
+    New Logic Is:
+    - external_resource is True and resource exists: finish
+    - external_resource is True and resource does not exist: fail
+    - external_resource is False and resource exists: warn
+    - external_resource is False and resource does not exist: create
+  - Fix call sequence in backup workflow.
+
+  v1.7.2:
+  - Rest Plugin Improvements
+  - Update tests to use cirleci v2 and to use ecosystem test tools
+  - added integration tests for key, file, cloudinit, deployment proxy,
+    and rest tools.
+
+  v1.7.3:
+  - Examples for use terminal plugin in relationships
+
+  v1.8.0:
+  - Add scale several scaling group in one transaction
+
+  v1.8.1:
+  - Scalelist Down: Additional examples for remove instances created by install
+    workflow.
+
+  v1.8.2:
+  - Scalelist Down: Additional examples for remove instances by property value
+    without transaction id.

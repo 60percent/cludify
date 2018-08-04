@@ -1,0 +1,50 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.define "manager" do |manager|
+    manager.vm.box = "bento/centos-7.2"
+    manager.vm.box_version = "2.3.1"
+    manager.vm.box_check_update = false
+
+    manager.vm.provider "virtualbox" do |vb|
+        vb.memory = "4096"
+    end
+
+    manager.vm.network "private_network", ip: "192.168.0.11"
+    manager.vm.network "forwarded_port", guest: 80, host: 2280
+
+    manager.vm.provision "shell", inline: <<-SHELL
+        sudo rpm --install /vagrant/cloudify-manager-install-community-*.rpm --verbose
+        sudo yum install python-backports-ssl_match_hostname python-setuptools python-backports --assumeyes --verbose
+        sudo yum install openssl --assumeyes --verbose
+    SHELL
+  end
+
+  config.vm.define "client" do |client|
+    client.vm.box = "bento/centos-7.2"
+    client.vm.box_version = "2.3.1"
+    client.vm.box_check_update = false
+
+    client.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+    end
+
+    client.vm.network "private_network", ip: "192.168.0.12"
+
+    client.vm.provision "shell", inline: <<-SHELL
+        sudo rpm --install /vagrant/cloudify-cli-community-*.rpm --verbose
+    SHELL
+  end
+
+  config.vm.define "node" do |node|
+    node.vm.box = "bento/centos-7.2"
+    node.vm.box_version = "2.3.1"
+    node.vm.box_check_update = false
+
+    node.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+    end
+
+    node.vm.network "private_network", ip: "192.168.0.13"
+  end
+
+end

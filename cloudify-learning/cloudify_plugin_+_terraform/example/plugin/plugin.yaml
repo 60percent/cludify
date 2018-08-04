@@ -1,0 +1,15 @@
+plugins:
+
+  example:
+    executor: host_agent
+    package_name: example-terraform-plugin
+    package_version: '0.1.0'
+
+node_types:
+
+  example.nodes.Terraform:
+    derived_from: cloudify.nodes.Root
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: example.example_package.tasks.create

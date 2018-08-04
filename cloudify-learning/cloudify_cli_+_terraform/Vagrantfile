@@ -1,0 +1,20 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "bento/centos-7.2"
+  config.vm.box_version = "2.3.1"
+  config.vm.box_check_update = false
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo rpm --install /vagrant/cloudify-cli-community-*.rpm --verbose
+  SHELL
+
+  config.vm.provision "shell", inline: <<-SHELL
+    sudo yum install epel-release --assumeyes --verbose
+    sudo yum install python-pip --assumeyes --verbose
+    sudo pip install awscli --verbose
+  SHELL
+end

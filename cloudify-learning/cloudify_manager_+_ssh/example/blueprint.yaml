@@ -1,0 +1,56 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/4.0/types.yaml
+  - http://www.getcloudify.org/spec/fabric-plugin/1.5.1/plugin.yaml
+
+inputs:
+
+  ip:
+    type: string
+
+  user:
+    type: string
+
+  password:
+    type: string
+
+node_templates:
+
+  host:
+    type: cloudify.nodes.Compute
+    properties:
+      ip: { get_input: ip }
+      install_agent: false
+
+  web:
+    type: cloudify.nodes.WebServer
+    relationships:
+      - type: cloudify.relationships.contained_in
+        target: host
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: install.sh
+            fabric_env:
+              host_string: { get_property: [ host, ip ] }
+              user: { get_input: user }
+              password: { get_input: password }
+            process:
+              cwd: /home/vagrant
+        delete:
+          implementation: fabric.fabric_plugin.tasks.run_script
+          inputs:
+            script_path: uninstall.sh
+            fabric_env:
+              host_string: { get_property: [ host, ip ] }
+              user: { get_input: user }
+              password: { get_input: password }
+            process:
+              cwd: /home/vagrant
+
+outputs:
+  endpoint:
+    value: { concat: ['http://', { get_property: [ host, ip ] }, ':5000' ] }

@@ -1,0 +1,7 @@
+*.rpm
+terraform
+.vagrant/
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.lock.info

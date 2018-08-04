@@ -1,0 +1,4 @@
+*.rpm
+*.wgn
+*.tar.gz
+.vagrant/
